@@ -16,8 +16,8 @@ sp_heat = 1000 # specific heat, [J/kgK], amount of energy required to raise temp
 # Nusselt # is the convective heat transfer / conductive heat transfer
 
 # Changes in some scenarios
-flow_def = 5 # [cfm]
-pitch = 0.002 # Fin Pitch, [m]
+flow_def = 5 # Default Flow Rate [cfm]
+pitch_def = 0.002 # Default Fin Pitch, [m]
 
 # Other
 cfm_to_m3s = 0.00047194745
@@ -27,14 +27,21 @@ T_amb = 25 # [degC], baseline ambient temperature for scenario 3
 def hydraulic_diameter(gap):
     a = gap
     b = height
-    return ((4*a*b)/((2*a)+(2*b)))
+    return (4*a*b)/((2*a)+(2*b))
 
 
+
+def compute_results(pitch):
+    results = {}
+    n_chan = int(np.floor(width/pitch))
 
 
 
 def scenario_1():
     flow = flow_def * cfm_to_m3s
     fin_pitch = np.linspace(0.001, 0.005, 9)
+    for pitch in fin_pitch:
+        r = compute_results(pitch)
+
 
 
