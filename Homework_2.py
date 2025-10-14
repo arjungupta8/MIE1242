@@ -14,7 +14,7 @@ mu = 0.0001 # [Pa*s = kg/ms]
 k_air = 0.02 # thermal conductivity, [W/mk]
 prandtl = 0.7 # Prandtl Number = viscous diffusion rate / thermal diffusion rate
 sp_heat = 1000 # specific heat, [J/kgK], amount of energy required to raise temperature of 1kg of fluid by 1K
-# Nusselt # is the convective heat transfer / conductive heat transfer
+const_A = 0.40377 # Numeric Value for Coefficient A for constant wall temperature
 
 # Changes in some scenarios
 flow_def = 5 # Default Flow Rate [cfm]
@@ -26,17 +26,16 @@ Q_heater = 50 # [W]
 T_amb = 25 # [degC], baseline ambient temperature for scenario 3
 
 
-def calculate_Nu(Re):
-    if Re < 2300:
-        return 3.66
-    else:
-        return 0.023 * (Re ** 0.8) * (prandtl ** 0.4)
+def calculate_Nu(Dh, Re, f):
+    Gz = (Dh*Re*prandtl)/length # Graetz Number
+    Nu_L_Lev = const_A * ((f*Re*Gz)**(1/3))
+    Nu_inf = 7.541 # fully developed transport constant for flow between parallel plates with constant wall temperature
+    n = (Nu_inf + 45.5)/14.5
+    O_lev = (Nu_inf - 7.16)/5
+    Nu = ((((Nu_L_Lev)**n) + (Nu_inf - O_lev)**n)**(1/n)) + O_lev
 
-def friction_factor(Re):
-    if Re < 2300:
-        return 96/Re
-    else:
-        return 0.3164 * (Re ** -0.25) # Blasius - empirical correlation for turbulent flow in smooth pipes
+    return Nu
+
 
 def pressure_drop(f, rho, vel, Dh):
     return f * length / Dh * rho * (vel ** 2) * 0.5
@@ -55,15 +54,15 @@ def compute_results(pitch, flow):
     # print ('Gap: ', gap)
     # print ('Number of chan: ', n_chan)
     Re = rho * vel * Dh / mu
-    print (f'Pitch: {pitch}, Gap: {gap}, Num Chan: {n_chan}, Num Fins: {n_fins}, Re: {Re}')
-    Nu = calculate_Nu(Re)
+    # print (f'Pitch: {pitch}, Gap: {gap}, Num Chan: {n_chan}, Num Fins: {n_fins}, Re: {Re}')
+    f = 96/Re # Darcy Friction Factor for parallel plates
+    Nu = calculate_Nu(Dh, Re, f)
     h = Nu * k_air / Dh # Calculates the convective heat transfer coefficient
-    fin_area = n_fins * 2 * height * length # Surface area per fin = height * length * 2 (2 sides). For all fins
-    base_area = length * width # Surface area of heat sink base
-    A_total = fin_area + base_area
+    fin_area = (n_fins-1) * 2 * height * length # Surface area per fin = height * length * 2 (2 sides). Outside surface of outside fins do not have the same HT
+    base_area = length * (gap*n_chan) # Surface area of heat sink base
+    A_total = fin_area + (2*base_area) # Inside of Top and Bottom Surfaces also considered
     hA = h * A_total
 
-    f = friction_factor(Re)
     delta_p = f * length / Dh * rho * (vel ** 2) * 0.5 # Darcy - Weisbach for major losses, no minor losses
     fan_power = delta_p * flow # Is this needed?
 
@@ -157,7 +156,7 @@ def scenario_2():
     plt.plot(flow_range, Nu_all, marker='o')
     plt.xlabel('Flow Rate (CFM)')
     plt.ylabel('Average Nusselt number per fin')
-    plt.title('Scenario 2: Average Nusselt Number vs Flow Rate (Fin Pitch = )')
+    plt.title('Scenario 2: Average Nusselt Number vs Flow Rate (Fin Pitch = 2mm)')
     plt.savefig('a2_s2_Nu_vs_flow_rate.png', dpi=300)
     plt.close()
 
