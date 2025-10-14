@@ -178,6 +178,7 @@ def scenario_3():
     operating_cfm_all = []
     Nu_op_all = []
     hA_op_all = []
+    air_temp_all = []
 
 
     for pitch in fin_pitches:
@@ -208,6 +209,10 @@ def scenario_3():
         T_core_all.append(T_core)
         Nu_op = Nu_all[idx]
         Nu_op_all.append(Nu_op)
+        delta_T_air = Q_heater / (rho * flow_operating * sp_heat)
+        print (delta_T_air)
+        out_air = T_amb + delta_T_air
+        air_temp_all.append(out_air)
 
 
 
@@ -260,6 +265,16 @@ def scenario_3():
     plt.title(f'Heat Transfer Coefficient vs Fin Pitch, at Operating Flow Rate')
     plt.savefig('a2_s3_pitch_vs_hA.png', dpi=300)
     plt.close()
+
+    plt.figure()
+    plt.plot(fin_pitches, air_temp_all, marker = 'o')
+    plt.xlabel('Fin Pitch (m)')
+    plt.ylabel('Outlet Air Temperature (degC)')
+    plt.title(f'Outlet Air Temperature vs Fin Pitch, at Operating Flow Rate')
+    plt.savefig('a2_s3_pitch_vs_outletAirTemp.png', dpi=300)
+    plt.close()
+
+
 
 if __name__ == '__main__':
     scenario_1()
