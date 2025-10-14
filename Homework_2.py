@@ -141,7 +141,7 @@ def scenario_2():
     plt.plot(flow_range, hA_all, marker='o')
     plt.xlabel('Flow Rate (CFM)')
     plt.ylabel('Heat Transfer Coefficient (hA)')
-    plt.title('Scenario 2: Heat Transfer Coefficient vs Flow Rate (Fin Pitch = 2mm')
+    plt.title('Scenario 2: Heat Transfer Coefficient vs Flow Rate (Fin Pitch = 2mm)')
     plt.savefig('a2_s2_hA_vs_flow_rate.png', dpi=300)
     plt.close()
 
@@ -149,7 +149,7 @@ def scenario_2():
     plt.plot(flow_range, R_conv_all, marker='o')
     plt.xlabel('Flow Rate (CFM)')
     plt.ylabel('Convective Thermal Resistance (1/hA)')
-    plt.title('Scenario 2: Convective Thermal Resistance vs Flow Rate (Fin Pitch = 2mm')
+    plt.title('Scenario 2: Convective Thermal Resistance vs Flow Rate (Fin Pitch = 2mm)')
     plt.savefig('a2_s2_res_vs_flow_rate.png', dpi=300)
     plt.close()
 
@@ -157,7 +157,7 @@ def scenario_2():
     plt.plot(flow_range, Nu_all, marker='o')
     plt.xlabel('Flow Rate (CFM)')
     plt.ylabel('Average Nusselt number per fin')
-    plt.title('Scenario 2: Average Nusselt Number vs Flow Rate (Fin Pitch = 2mm')
+    plt.title('Scenario 2: Average Nusselt Number vs Flow Rate (Fin Pitch = )')
     plt.savefig('a2_s2_Nu_vs_flow_rate.png', dpi=300)
     plt.close()
 
@@ -165,7 +165,7 @@ def scenario_2():
     plt.plot(flow_range, delta_p_all, marker='o')
     plt.xlabel('Flow Rate (CFM)')
     plt.ylabel('Pressure Drop (Pascals)')
-    plt.title('Scenario 2: Pressure Drop vs Flow Rate (Fin Pitch = 2mm')
+    plt.title('Scenario 2: Pressure Drop vs Flow Rate (Fin Pitch = 2mm)')
     plt.savefig('a2_s2_deltaP_vs_flow_rate.png', dpi=300)
     plt.close()
 
@@ -232,7 +232,7 @@ def scenario_3():
     plt.plot(fin_pitches, out_T_all, marker = 'o')
     plt.xlabel('Fin Pitch (m)')
     plt.ylabel('Outlet Air Temperature (degC)')
-    plt.title(f'Outlet Air Temperarture vs Fin Pitch, for Operating Flow Rate')
+    plt.title(f'Outlet Air Temperature vs Fin Pitch, for Operating Flow Rate')
     plt.savefig('a2_s3_pitch_vs_outAirTemp.png', dpi=300)
     plt.close()
 
