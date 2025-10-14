@@ -173,12 +173,15 @@ def scenario_3():
     fin_pitches = np.linspace(0.001, 0.005, 5)
     flow_range = np.linspace(1, 20, 20)
 
-    delta_T_all = []
+    T_core_all = []
     delta_P_all = []
-    out_T_all = []
+    operating_cfm_all = []
+    Nu_op_all = []
+    hA_op_all = []
+
 
     for pitch in fin_pitches:
-        deltaP_allPitches = []
+        deltaP_allFlow = []
         Nu_all = []
         hA_all = []
         R_conv_all = []
@@ -189,34 +192,40 @@ def scenario_3():
             hA_all.append(hA)
             R_conv = 1 / hA
             R_conv_all.append(R_conv)
-            deltaP_allPitches.append(delta_p)
-        deltaP_array = np.array(deltaP_allPitches) # convert to NumPy array to make it easier to work with
+            deltaP_allFlow.append(delta_p)
+        deltaP_array = np.array(deltaP_allFlow) # convert to NumPy array to make it easier to work with
         deltaP_fan = fan_pressure(flow_range) # can send the whole array as it is NumPy and will return array
         diff = np.abs(deltaP_fan - deltaP_array) # NumPy arrays be like MATLAB arrays. So this works
         idx = np.nanargmin(diff) # Looks for index where difference is the smallest - operating point
         flow_operating = (flow_range[idx]) * cfm_to_m3s
-        deltaP_operating = deltaP_allPitches[idx]
-        deltaT_air = Q_heater / (rho * flow_operating * sp_heat)
-        delta_T_all.append(deltaT_air)
+        flow_operating_cfm = flow_operating / cfm_to_m3s
+        operating_cfm_all.append(flow_operating_cfm)
+        deltaP_operating = deltaP_allFlow[idx]
         delta_P_all.append(deltaP_operating)
-        out_T = T_amb + deltaT_air
-        out_T_all.append(out_T)
+        hA_op = hA_all[idx]
+        hA_op_all.append(hA_op)
+        T_core = T_amb + (Q_heater * (1/(hA_op)))
+        T_core_all.append(T_core)
+        Nu_op = Nu_all[idx]
+        Nu_op_all.append(Nu_op)
 
 
-        plt.figure()
-        plt.plot(flow_range, deltaP_array, marker = 'o')
-        plt.xlabel('Flow Rate (CFM)')
-        plt.ylabel('Pressure Drop (Pascals)')
-        plt.title(f'Flow Rate vs Overall Pressure Drop through Heat Sink, Fin Pitch = {pitch}m')
-        plt.savefig(f'a2_s3_flow_vs_deltaP_{pitch}.png', dpi=300)
-        plt.close()
+
+#        plt.figure()
+#        plt.plot(flow_range, deltaP_array, marker = 'o')
+#        plt.xlabel('Flow Rate (CFM)')
+#        plt.ylabel('Pressure Drop (Pascals)')
+#        plt.title(f'Flow Rate vs Overall Pressure Drop through Heat Sink, Fin Pitch = {pitch}m')
+#        plt.axvline(x=flow_operating_cfm, color='r', linestyle='--')
+#        plt.savefig(f'a2_s3_flow_vs_deltaP_{pitch}.png', dpi=300)
+#        plt.close()
 
     plt.figure()
-    plt.plot(fin_pitches, delta_T_all, marker = 'o')
+    plt.plot(fin_pitches, T_core_all, marker = 'o')
     plt.xlabel('Fin Pitch (m)')
-    plt.ylabel('Air Temperature Rise (degK)')
-    plt.title(f'Air Temperature Rise vs Fin Pitch, for Operating Flow Rate')
-    plt.savefig('a2_s3_pitch_vs_temprise.png', dpi=300)
+    plt.ylabel('Heater Core Temperature (degC)')
+    plt.title(f'Heater Core Temperature vs Fin Pitch, for Operating Flow Rate')
+    plt.savefig('a2_s3_pitch_vs_temp.png', dpi=300)
     plt.close()
 
     plt.figure()
@@ -227,12 +236,29 @@ def scenario_3():
     plt.savefig('a2_s3_pitch_vs_pressureDrop.png', dpi=300)
     plt.close()
 
+
     plt.figure()
-    plt.plot(fin_pitches, out_T_all, marker = 'o')
+    plt.plot(fin_pitches, operating_cfm_all, marker = 'o')
     plt.xlabel('Fin Pitch (m)')
-    plt.ylabel('Outlet Air Temperature (degC)')
-    plt.title(f'Outlet Air Temperature vs Fin Pitch, for Operating Flow Rate')
-    plt.savefig('a2_s3_pitch_vs_outAirTemp.png', dpi=300)
+    plt.ylabel('Operating Flow Rate (CFM)')
+    plt.title(f'Operating Flow Rate vs Fin Pitch')
+    plt.savefig('a2_s3_pitch_vs_flowrate.png', dpi=300)
+    plt.close()
+
+    plt.figure()
+    plt.plot(fin_pitches, Nu_op_all, marker = 'o')
+    plt.xlabel('Fin Pitch (m)')
+    plt.ylabel('Nusselt Number per fin')
+    plt.title(f'Average Nusselt Number per fin vs Fin Pitch, at Operating Flow Rate')
+    plt.savefig('a2_s3_pitch_vs_nu.png', dpi=300)
+    plt.close()
+
+    plt.figure()
+    plt.plot(fin_pitches, hA_op_all, marker = 'o')
+    plt.xlabel('Fin Pitch (m)')
+    plt.ylabel(' Heat Transfer Coefficient (hA)')
+    plt.title(f'Heat Transfer Coefficient vs Fin Pitch, at Operating Flow Rate')
+    plt.savefig('a2_s3_pitch_vs_hA.png', dpi=300)
     plt.close()
 
 if __name__ == '__main__':
