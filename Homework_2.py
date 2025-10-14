@@ -55,6 +55,7 @@ def compute_results(pitch, flow):
     # print ('Gap: ', gap)
     # print ('Number of chan: ', n_chan)
     Re = rho * vel * Dh / mu
+    print (f'Pitch: {pitch}, Gap: {gap}, Num Chan: {n_chan}, Num Fins: {n_fins}, Re: {Re}')
     Nu = calculate_Nu(Re)
     h = Nu * k_air / Dh # Calculates the convective heat transfer coefficient
     fin_area = n_fins * 2 * height * length # Surface area per fin = height * length * 2 (2 sides). For all fins
@@ -91,7 +92,7 @@ def scenario_1():
 
     plt.figure()
     plt.plot(fin_pitch, Nu_all, marker='o')
-    plt.xlabel('Fin pitch (mm)')
+    plt.xlabel('Fin pitch (m)')
     plt.ylabel('Average Nusselt number per fin')
     plt.title('Scenario 1: Nu vs Fin Pitch (Q = 5 CFM)')
     plt.savefig('a2_s1_nu_vs_pitch.png', dpi=300)
@@ -99,7 +100,7 @@ def scenario_1():
 
     plt.figure()
     plt.plot(fin_pitch, hA_all, marker='o')
-    plt.xlabel('Fin pitch (mm)')
+    plt.xlabel('Fin pitch (m)')
     plt.ylabel('Overall Heat Transfer Coefficient (h*A)')
     plt.title('Scenario 1: Heat Transfer Coefficient vs Fin Pitch (Q = 5 CFM)')
     plt.savefig('a2_s1_hA_vs_pitch.png', dpi=300)
@@ -107,7 +108,7 @@ def scenario_1():
 
     plt.figure()
     plt.plot(fin_pitch, R_conv_all, marker='o')
-    plt.xlabel('Fin pitch (mm)')
+    plt.xlabel('Fin pitch (m)')
     plt.ylabel('Convective Thermal Resistance')
     plt.title('Scenario 1: Convective Thermal Resistance vs Fin Pitch (Q = 5 CFM)')
     plt.savefig('a2_s1_res_vs_pitch.png', dpi=300)
@@ -115,7 +116,7 @@ def scenario_1():
 
     plt.figure()
     plt.plot(fin_pitch, delta_p_all, marker='o')
-    plt.xlabel('Fin pitch (mm)')
+    plt.xlabel('Fin pitch (m)')
     plt.ylabel('Pressure Drop (Pascals)')
     plt.title('Scenario 1: Overall Pressure Drop vs Fin Pitch (Q = 5 CFM)')
     plt.savefig('a2_s1_deltaP_vs_pitch.png', dpi=300)
@@ -215,7 +216,7 @@ def scenario_3():
     plt.plot(fin_pitches, delta_T_all, marker = 'o')
     plt.xlabel('Fin Pitch (m)')
     plt.ylabel('Air Temperature Rise (degK)')
-    plt.title(f'Air Temperature Rise vs Fin Patch, for Operating Flow Rate')
+    plt.title(f'Air Temperature Rise vs Fin Pitch, for Operating Flow Rate')
     plt.savefig('a2_s3_pitch_vs_temprise.png', dpi=300)
     plt.close()
 
@@ -223,15 +224,15 @@ def scenario_3():
     plt.plot(fin_pitches, delta_P_all, marker = 'o')
     plt.xlabel('Fin Pitch (m)')
     plt.ylabel('Pressure Drop (Pascals)')
-    plt.title(f'Operating Pressure Drop vs Fin Patch, for Operating Flow Rate')
+    plt.title(f'Operating Pressure Drop vs Fin Pitch, for Operating Flow Rate')
     plt.savefig('a2_s3_pitch_vs_pressureDrop.png', dpi=300)
     plt.close()
 
     plt.figure()
-    plt.plot(fin_pitches, delta_P_all, marker = 'o')
+    plt.plot(fin_pitches, out_T_all, marker = 'o')
     plt.xlabel('Fin Pitch (m)')
     plt.ylabel('Outlet Air Temperature (degC)')
-    plt.title(f'Outlet Air Temperarture vs Fin Patch, for Operating Flow Rate')
+    plt.title(f'Outlet Air Temperarture vs Fin Pitch, for Operating Flow Rate')
     plt.savefig('a2_s3_pitch_vs_outAirTemp.png', dpi=300)
     plt.close()
 
